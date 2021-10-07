@@ -62,17 +62,23 @@ def cell_checker(cell):
     return(valid_cell)
 
 
-def new_cell(current_cell, depth):
+def new_cell(current_cell, depth, facing):
     depth += 1
-    facing = (0, 1)
     draw_cell(current_cell)
     visited_cells.append(current_cell)
-    possible_directions = [(0, 1), (0, -1), (1, 0), (-1, 0)]
-    random.shuffle(possible_directions)
-    for direction in possible_directions:
-        cell = add_tuples(current_cell, direction)
+
+    if (depth % 2 == 0):
+        possible_directions = [(0, 1), (0, -1), (1, 0), (-1, 0)]
+        random.shuffle(possible_directions)
+        for direction in possible_directions:
+            cell = add_tuples(current_cell, direction)
+            if (cell_checker(cell)):
+                new_cell(cell, depth, direction)
+
+    else:
+        cell = add_tuples(current_cell, facing)
         if (cell_checker(cell)):
-            new_cell(cell, depth)
+            new_cell(cell, depth, facing)
 
     # Only prints if none of the four neighbours of the current cell are valid
     print("The maze is stuck")
@@ -86,7 +92,7 @@ draw_background()
 visited_cells = []
 current_cell = (0, 0)
 depth = 0
-new_cell(current_cell, depth)
+new_cell(current_cell, depth, (0, 1))
 
 
 # Pour éviter que le programme plante
