@@ -42,17 +42,33 @@ def add_tuples(t1, t2):
     return((t1[0] + t2[0], t1[1] + t2[1]))
 
 
+def cell_checker(cell):
+    valid_cell = True
+    # Checks if the maze goes back on itself.
+    if (cell in visited_cells):
+        valid_cell = False
+
+    # Checks if the maze goes out of bounds.
+    if ((not (0 <= cell[0] <= 25)) or (not (0 <= cell[1] <= 25))):
+        valid_cell = False
+
+    return(valid_cell)
+
+
 def new_cell(current_cell, depth):
     depth += 1
     facing = (0, 1)
     draw_cell(current_cell)
-    
-    if (depth %2 == 0):
-        possible_directions = [(0, 1), (0, -1), (1, 0), (-1, 0)]
-        facing = possible_directions[random.randint(0, 3)]
+    visited_cells.append(current_cell)
+    possible_directions = [(0, 1), (0, -1), (1, 0), (-1, 0)]
+    random.shuffle(possible_directions)
+    for direction in possible_directions:
+        cell = add_tuples(current_cell, direction)
+        if (cell_checker(cell)):
+            new_cell(cell, depth)
 
-    next_cell = add_tuples(current_cell, facing)
-    new_cell(next_cell, depth)
+    # Only prints if none of the four neighbours of the current cell are valid
+    print("The maze is stuck")
 
 draw_background()
 visited_cells = []
