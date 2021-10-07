@@ -67,7 +67,7 @@ def new_cell(current_cell, depth, facing):
     draw_cell(current_cell)
     visited_cells.append(current_cell)
 
-    if (depth % 2 == 0):
+    if ((depth + 1) % 2 == 0):
         possible_directions = [(0, 1), (0, -1), (1, 0), (-1, 0)]
         random.shuffle(possible_directions)
         for direction in possible_directions:
@@ -86,13 +86,16 @@ def new_cell(current_cell, depth, facing):
 
 maze_x = int(input("Width of the maze = "))
 maze_y = int(input("height of the maze = "))
+starting_cell_x = int(input("X coord of the starting cell = "))
+starting_cell_y = int(input("y coord of the starting cell = "))
+starting_cell = (starting_cell_x, starting_cell_y)
 maze_size_x = (maze_x + 2) * 20
 maze_size_y = (maze_y + 2) * 20
+
 draw_background()
 visited_cells = []
-current_cell = (0, 0)
 depth = 0
-new_cell(current_cell, depth, (0, 1))
+new_cell(starting_cell, depth, (0, 1))
 
 
 # Pour éviter que le programme plante
