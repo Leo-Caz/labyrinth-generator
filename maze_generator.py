@@ -44,13 +44,25 @@ def add_tuples(t1, t2):
 
 def cell_checker(cell):
     valid_cell = True
-    # Checks if the maze goes back on itself.
-    if (cell in visited_cells):
+    
+    # Checks if the maze goes out of bounds.
+    if ((not (0 <= cell[0] < 25)) or (not (0 <= cell[1] < 25))):
         valid_cell = False
 
-    # Checks if the maze goes out of bounds.
-    if ((not (0 <= cell[0] <= 25)) or (not (0 <= cell[1] <= 25))):
+    # Checks if the maze goes back on itself.
+    elif (cell in visited_cells):
         valid_cell = False
+
+    # Checks if the maze will connect back on itself.
+    else:
+        neighbours = 0
+        possible_directions = [(0, 1), (0, -1), (1, 0), (-1, 0)]
+        for direction in possible_directions:
+            neighbours_cell = add_tuples(cell, direction)
+            if (neighbours_cell in visited_cells):
+                neighbours += 1
+        if (neighbours > 1):
+            valid_cell = False
 
     return(valid_cell)
 
