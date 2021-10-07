@@ -2,34 +2,30 @@ import turtle as t
 import random
 
 
-def draw_background():
-    t.setup(500, 500)
-    t.speed(50)
-    jump(-250, -250)
-    t.fillcolor("black")
-    t.begin_fill()
-    for i in range(4):
-        t.forward(500)
-        t.left(90)
-    t.end_fill()
-    t.pencolor("white")
-  
-
-def jump(x, y):
+def jump_to(x, y):
     t.up()
     t.goto(x, y)
     t.down()
 
 
-def skip(d):
-    t.up()
-    t.forward(d)
-    t.down()
+def draw_background():
+    t.setup(maze_size_x, maze_size_y)
+    t.speed(50)
+    jump_to(-(maze_size_x/ 2), -(maze_size_y / 2))
+    t.fillcolor("black")
+    t.begin_fill()
+    for i in range(2):
+        t.forward(maze_size_x)
+        t.left(90)
+        t.forward(maze_size_y)
+        t.left(90)
+    t.end_fill()
+    t.pencolor("white")
 
 
 def draw_cell(coord_cell):
     x, y = coord_cell
-    jump(-250 + (x * 20), -250 + (y * 20))
+    jump_to((-maze_size_x / 2) + (x + 1) * 20, (-maze_size_y / 2) + (y + 1) * 20)
     t.fillcolor("white")
     t.begin_fill()
     for i in range(4):
@@ -44,9 +40,8 @@ def add_tuples(t1, t2):
 
 def cell_checker(cell):
     valid_cell = True
-    
     # Checks if the maze goes out of bounds.
-    if ((not (0 <= cell[0] < 25)) or (not (0 <= cell[1] < 25))):
+    if ((not (0 <= cell[0] < maze_x)) or (not (0 <= cell[1] < maze_y))):
         valid_cell = False
 
     # Checks if the maze goes back on itself.
@@ -82,6 +77,11 @@ def new_cell(current_cell, depth):
     # Only prints if none of the four neighbours of the current cell are valid
     print("The maze is stuck")
 
+
+maze_x = int(input("Width of the maze = "))
+maze_y = int(input("height of the maze = "))
+maze_size_x = (maze_x + 2) * 20
+maze_size_y = (maze_y + 2) * 20
 draw_background()
 visited_cells = []
 current_cell = (0, 0)
