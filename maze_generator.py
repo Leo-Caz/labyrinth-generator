@@ -24,7 +24,7 @@ def draw_background():
     t.end_fill()
 
 
-# Draws the cell 
+# Draws the cell
 def draw_cell(coord_cell, color):
     x, y = coord_cell
     # Go to the cell (convert the coordonates if the cell to the place on the creen)
@@ -54,6 +54,14 @@ def add_tuples(t1, t2):
     return((t1[0] + t2[0], t1[1] + t2[1]))
 
 
+def has_reached_ending(cell):
+    possible_directions = [(-2, 0), (2, 0), (0, 2), (0, -2)]
+    for direction in possible_directions:
+        neighbours_cell = add_tuples(cell, direction)
+        if neighbours_cell == ending_cell:
+            print("uuu")
+            return True
+
 # Function that checks if a cell can be drawn here
 def cell_checker(cell, depth):
     global end_neighbours
@@ -73,16 +81,20 @@ def cell_checker(cell, depth):
         possible_directions = [(0, 1), (0, -1), (1, 0), (-1, 0)]
         for direction in possible_directions:
             neighbours_cell = add_tuples(cell, direction)
-            if (neighbours_cell in visited_cells):
+            if neighbours_cell in visited_cells:
                 neighbours += 1
 
+                # print(neighbours_cell)
+
                 # Checks if the cell is next to the ending
-                if (neighbours_cell == ending_cell):
-                    end_neighbours.append((cell[0], cell[1], depth))
-        if (neighbours > 1):
+                # if neighbours_cell == ending_cell:
+                #     end_neighbours.append((cell[0], cell[1], depth))
+                #     print("ending reached")
+                #     ending_reached = True
+        if neighbours > 1:
             valid_cell = False
 
-    return(valid_cell)
+    return valid_cell
 
 
 # Most important part if the programm
@@ -90,23 +102,34 @@ def cell_checker(cell, depth):
 # Once it's stuck and cannot go further, it will continue
 # with a new branch off of the last drawn cell with a valid space next to it.
 def new_cell(current_cell, depth, facing):
+    global ending_reached
+
     depth += 1
     # draws the starting point in red
-    if (depth == 1):
+    if depth == 1:
         color = "red"
     else:
         color = "white"
     draw_cell(current_cell, color)
     visited_cells.append(current_cell)
 
+    if (has_reached_ending(current_cell)):
+        ending_reached = True
+        end_neighbours.append((current_cell[0], current_cell[1], depth))
+
+    if depth == 30:
+        ending_reached = False
+
     # The path will try to change directions once every two turns to look cleaner
     if ((depth + 1) % 2 == 0):
         possible_directions = [(0, 1), (0, -1), (1, 0), (-1, 0)]
         random.shuffle(possible_directions)
         # We try every neighbour cell possible but in a random order
+        # if not ending_reached:
         for direction in possible_directions:
             cell = add_tuples(current_cell, direction)
-            if (cell_checker(cell, depth)):
+            # if (cell_checker(cell, depth)):
+            if (cell_checker(cell, depth) and not ending_reached):
                 new_cell(cell, depth, direction)
 
     else:
@@ -123,6 +146,7 @@ starting_cell_y = int(input("y coord of starting cell = "))
 ending_cell_x = int(input("X coord of ending cell = "))
 ending_cell_y = int(input("Y coord of ending cell = "))
 ending_cell = (ending_cell_x, ending_cell_y)
+ending_reached = False
 starting_cell = (starting_cell_x, starting_cell_y)
 maze_size_x = (maze_x + 2) * 20
 maze_size_y = (maze_y + 2) * 20
