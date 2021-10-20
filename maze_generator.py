@@ -59,7 +59,7 @@ def has_reached_ending(cell):
     for direction in possible_directions:
         neighbours_cell = add_tuples(cell, direction)
         if neighbours_cell == ending_cell:
-            print("uuu")
+            # print("uuu")
             return True
 
 # Function that checks if a cell can be drawn here
@@ -117,8 +117,6 @@ def new_cell(current_cell, depth, facing):
         ending_reached = True
         end_neighbours.append((current_cell[0], current_cell[1], depth))
 
-    if depth == 30:
-        ending_reached = False
 
     # The path will try to change directions once every two turns to look cleaner
     if ((depth + 1) % 2 == 0):
@@ -129,7 +127,13 @@ def new_cell(current_cell, depth, facing):
         for direction in possible_directions:
             cell = add_tuples(current_cell, direction)
             # if (cell_checker(cell, depth)):
+            # print("ooo")
+            print(depth, ending_reached)
+            if depth <= 30:
+                # print("iii")
+                ending_reached = False
             if (cell_checker(cell, depth) and not ending_reached):
+                # print("eee")
                 new_cell(cell, depth, direction)
 
     else:
